@@ -68,8 +68,9 @@ public abstract class IntegrationTest {
     private static MySQLContainer startMysql() {
         MySQLContainer container =
                 new MySQLContainer("mysql:8.4")
-                        .withUrlParam("connectionTimeZone", "+08:00")
-                        .withUrlParam("forceConnectionTimeZoneToSession", "true");
+                        // 與 docker-compose.yml 相同：資料庫時區 +08:00
+                        .withCommand("--default-time-zone=+08:00")
+                        .withUrlParam("connectionTimeZone", "Asia/Taipei");
         container.start();
         return container;
     }
