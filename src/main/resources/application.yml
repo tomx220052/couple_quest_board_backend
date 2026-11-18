@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: couple-quest-board
+  config:
+    # 在 IDE 或 ./mvnw spring-boot:run 直接啟動時讀取專案根目錄的 .env；容器內沒有此檔，以環境變數為準
+    import: "optional:file:.env[.properties]"
   datasource:
     # 時區固定 Asia/Taipei：MySQL 以 --default-time-zone=+08:00 啟動、JVM 以 -Duser.timezone 設定
     url: "jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:couple_quest_board}?connectionTimeZone=Asia/Taipei"

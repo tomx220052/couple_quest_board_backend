@@ -20,3 +20,6 @@ jobs:
       # 單元＋整合測試（Testcontainers 使用 runner 內建的 Docker）
       - name: 測試與打包
         run: ./mvnw -B -ntp verify -Dsurefire.useFile=false -DtrimStackTrace=false
+
+      - name: 建置 Docker image
+        run: docker build -t couple-quest-board-backend:ci .
