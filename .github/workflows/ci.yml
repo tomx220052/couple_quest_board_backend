@@ -23,3 +23,23 @@ jobs:
 
       - name: 建置 Docker image
         run: docker build -t couple-quest-board-backend:ci .
+
+      # B0 完成標準：以正式 image＋開發覆寫檔起 app＋db，/api/auth/me 回傳開發模式使用者
+      - name: Compose 冒煙測試
+        env:
+          APP_VERSION: ci
+        run: |
+          cp .env.example .env
+          docker compose up -d
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:3000/api/health; then break; fi
+            sleep 2
+          done
+          echo
+          curl -fsS http://localhost:3000/api/auth/me | tee /tmp/me.json
+          echo
+          grep -q '"email":"dev@example.com"' /tmp/me.json
+
+      - name: Compose 紀錄
+        if: always()
+        run: docker compose logs --no-color || true
