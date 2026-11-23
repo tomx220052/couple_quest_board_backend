@@ -1,0 +1,17 @@
+# 本機開發用的覆寫檔，疊在 docker-compose.yml 之上。正式環境不可使用。
+#   .env 設定 COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml 後：
+#   docker compose up -d db          只起資料庫，供 IDE 或 ./mvnw spring-boot:run 連線
+#   docker compose up --build        以正式 image 整合驗證，API 在 http://localhost:3000
+
+services:
+  db:
+    ports:
+      - '127.0.0.1:3306:3306'
+
+  app:
+    ports:
+      - '127.0.0.1:3000:3000'
+    environment:
+      AUTH_MODE: dev
+      DEV_USER_EMAIL: ${DEV_USER_EMAIL:-dev@example.com}
+      DEV_USER_NAME: ${DEV_USER_NAME:-開發者}

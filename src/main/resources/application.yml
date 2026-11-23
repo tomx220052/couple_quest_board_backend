@@ -1,0 +1,30 @@
+server:
+  port: 3000
+
+spring:
+  application:
+    name: couple-quest-board
+  config:
+    # 在 IDE 或 ./mvnw spring-boot:run 直接啟動時讀取專案根目錄的 .env；容器內沒有此檔，以環境變數為準
+    import: "optional:file:.env[.properties]"
+  datasource:
+    # 時區固定 Asia/Taipei：MySQL 以 --default-time-zone=+08:00 啟動、JVM 以 -Duser.timezone 設定
+    url: "jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:couple_quest_board}?connectionTimeZone=Asia/Taipei"
+    username: ${DB_USER:cqb}
+    password: ${DB_PASSWORD:cqb}
+  jpa:
+    open-in-view: false
+    hibernate:
+      # 表結構只由 Flyway 管理，Hibernate 只做比對
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+cqb:
+  auth:
+    # access：驗證 Cloudflare Access JWT（正式）；dev：固定使用者（僅限本機開發與測試）
+    mode: ${AUTH_MODE:access}
+    dev-user-email: ${DEV_USER_EMAIL:}
+    dev-user-name: ${DEV_USER_NAME:開發者}
+    access-team-domain: ${ACCESS_TEAM_DOMAIN:}
+    access-aud: ${ACCESS_AUD:}

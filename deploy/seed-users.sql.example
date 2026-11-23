@@ -1,0 +1,8 @@
+-- 建立使用者（規格書 7.5）。複製為 seed-users.sql 後填入實際 email，該檔不進版控。
+-- email 必須與 Cloudflare Access 允許清單中的 Google 帳號一致。
+-- 套用：
+--   docker compose exec -T db sh -c 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' < deploy/seed-users.sql
+
+INSERT INTO app_user (email, display_name) VALUES
+  ('you@gmail.com', 'Howard'),
+  ('partner@gmail.com', '另一半');

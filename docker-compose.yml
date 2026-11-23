@@ -1,0 +1,43 @@
+# 後端：app → db
+# app 與 db 都不對主機開 port；本機開發請在 .env 設定 COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
+# 對外入口（Cloudflare Tunnel）在前端串接與上線階段再加入。
+
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:?請在 .env 設定 DB_NAME}
+      MYSQL_USER: ${DB_USER:?請在 .env 設定 DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?請在 .env 設定 DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?請在 .env 設定 DB_ROOT_PASSWORD}
+      TZ: Asia/Taipei
+    command: ['--default-time-zone=+08:00']
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -uroot -p"$$MYSQL_ROOT_PASSWORD" --silent']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  app:
+    build: .
+    image: couple-quest-board-backend:${APP_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      AUTH_MODE: access
+      ACCESS_TEAM_DOMAIN: ${ACCESS_TEAM_DOMAIN:-}
+      ACCESS_AUD: ${ACCESS_AUD:-}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
