@@ -60,7 +60,7 @@ public abstract class IntegrationTest {
     void resetDatabase() {
         jdbc.update("DELETE FROM subtask");
         jdbc.update("DELETE FROM goal");
-        jdbc.update("DELETE FROM domain");
+        jdbc.update("DELETE FROM area");
         jdbc.update("DELETE FROM app_user");
         devUserInitializer.ensureDevUser();
     }

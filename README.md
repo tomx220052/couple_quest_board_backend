@@ -72,7 +72,7 @@ src/main/java/com/hannzer/cqb/
 ├── auth/                 登入（開發模式、Access JWT）、CurrentUser
 ├── common/error/         統一錯誤格式 { code, message }
 ├── common/health/        /api/health
-├── domains/              領域（頁籤）：新增、改名、排序、隱藏／恢復顯示
+├── areas/                領域（頁籤）：新增、改名、排序、隱藏／恢復顯示
 └── users/                app_user
 src/main/resources/db/migration/   Flyway migration（既有檔案合併後不再修改）
 deploy/                   備份腳本、使用者 seed 範本

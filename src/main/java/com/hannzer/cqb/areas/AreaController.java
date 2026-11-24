@@ -1,4 +1,4 @@
-package com.hannzer.cqb.domains;
+package com.hannzer.cqb.areas;
 
 import com.hannzer.cqb.auth.CurrentUser;
 import jakarta.validation.Valid;
@@ -17,50 +17,50 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** 領域 API（規格書第 6 節） */
 @RestController
-@RequestMapping("/api/domains")
-class DomainController {
+@RequestMapping("/api/areas")
+class AreaController {
 
     private static final String INVALID_ID = "id 必須為正整數";
 
-    private final DomainService service;
+    private final AreaService service;
 
-    DomainController(DomainService service) {
+    AreaController(AreaService service) {
         this.service = service;
     }
 
     /** 所有領域（含已隱藏），供「編輯領域」使用 */
     @GetMapping
-    List<DomainView> list() {
+    List<AreaView> list() {
         return service.list();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    DomainView create(@Valid @RequestBody DomainRequests.Name body, CurrentUser user) {
+    AreaView create(@Valid @RequestBody AreaRequests.Name body, CurrentUser user) {
         return service.create(body.name(), user.id());
     }
 
     /** 改名 */
     @PatchMapping("/{id}")
-    DomainView rename(
+    AreaView rename(
             @PathVariable @Positive(message = INVALID_ID) long id,
-            @Valid @RequestBody DomainRequests.Name body) {
+            @Valid @RequestBody AreaRequests.Name body) {
         return service.rename(id, body.name());
     }
 
     /** 調整排序：傳入完整的領域 id 順序 */
     @PutMapping("/order")
-    List<DomainView> reorder(@Valid @RequestBody DomainRequests.Order body) {
+    List<AreaView> reorder(@Valid @RequestBody AreaRequests.Order body) {
         return service.reorder(body.ids());
     }
 
     @PostMapping("/{id}/hide")
-    DomainView hide(@PathVariable @Positive(message = INVALID_ID) long id) {
+    AreaView hide(@PathVariable @Positive(message = INVALID_ID) long id) {
         return service.setHidden(id, true);
     }
 
     @PostMapping("/{id}/unhide")
-    DomainView unhide(@PathVariable @Positive(message = INVALID_ID) long id) {
+    AreaView unhide(@PathVariable @Positive(message = INVALID_ID) long id) {
         return service.setHidden(id, false);
     }
 }

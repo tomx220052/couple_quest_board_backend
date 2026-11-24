@@ -1,4 +1,4 @@
-package com.hannzer.cqb.domains;
+package com.hannzer.cqb.areas;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,8 +13,8 @@ import jakarta.persistence.Table;
  * <p>created_at、updated_at 由資料庫維護，不對應到欄位。
  */
 @Entity
-@Table(name = "domain")
-public class Domain {
+@Table(name = "area")
+public class Area {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +32,9 @@ public class Domain {
     @Column(name = "created_by", nullable = false, updatable = false)
     private Long createdBy;
 
-    protected Domain() {}
+    protected Area() {}
 
-    public Domain(String name, int sortOrder, long createdBy) {
+    public Area(String name, int sortOrder, long createdBy) {
         this.name = name;
         this.sortOrder = sortOrder;
         this.createdBy = createdBy;
