@@ -13,7 +13,7 @@ import org.springframework.dao.DataAccessException;
 class MigrationTest extends IntegrationTest {
 
     @Test
-    @DisplayName("建立 app_user、domain、goal、subtask 四張資料表")
+    @DisplayName("建立 app_user、area、goal、subtask 四張資料表")
     void createsTables() {
         var tables =
                 jdbc.queryForList(
@@ -24,7 +24,7 @@ class MigrationTest extends IntegrationTest {
                         """,
                         String.class);
 
-        assertThat(tables).containsExactly("app_user", "domain", "goal", "subtask");
+        assertThat(tables).containsExactly("app_user", "area", "goal", "subtask");
     }
 
     @Test
@@ -45,12 +45,12 @@ class MigrationTest extends IntegrationTest {
     @DisplayName("updated_at 由資料庫在更新時自動刷新")
     void updatedAtRefreshesOnUpdate() {
         insertGoal();
-        jdbc.update("UPDATE domain SET updated_at = '2000-01-01 00:00:00'");
+        jdbc.update("UPDATE area SET updated_at = '2000-01-01 00:00:00'");
 
-        jdbc.update("UPDATE domain SET name = '健康生活'");
+        jdbc.update("UPDATE area SET name = '健康生活'");
 
         LocalDateTime updatedAt =
-                jdbc.queryForObject("SELECT updated_at FROM domain", LocalDateTime.class);
+                jdbc.queryForObject("SELECT updated_at FROM area", LocalDateTime.class);
         assertThat(updatedAt).isAfter(LocalDateTime.now().minusMinutes(1));
     }
 
@@ -68,11 +68,11 @@ class MigrationTest extends IntegrationTest {
     private long insertGoal() {
         jdbc.update("INSERT INTO app_user (email, display_name) VALUES ('m@example.com', 'M')");
         jdbc.update(
-                "INSERT INTO domain (name, sort_order, created_by)"
+                "INSERT INTO area (name, sort_order, created_by)"
                         + " SELECT '健康', 1, id FROM app_user WHERE email = 'm@example.com'");
         jdbc.update(
-                "INSERT INTO goal (domain_id, title, created_by)"
-                        + " SELECT d.id, '目標', d.created_by FROM domain d");
+                "INSERT INTO goal (area_id, title, created_by)"
+                        + " SELECT d.id, '目標', d.created_by FROM area d");
         return jdbc.queryForObject("SELECT id FROM goal", Long.class);
     }
 
