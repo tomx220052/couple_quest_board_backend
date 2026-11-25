@@ -40,7 +40,7 @@ public class AreaService {
     }
 
     public AreaView rename(long id, String name) {
-        Area area = get(id);
+        Area area = getArea(id);
         area.rename(name);
         saveAndFlush(area);
         return AreaView.from(area);
@@ -71,12 +71,13 @@ public class AreaService {
 
     /** 隱藏或恢復顯示；其下目標與子任務原封不動，排序位置也保留（規格書 4.4、4.5） */
     public AreaView setHidden(long id, boolean hidden) {
-        Area area = get(id);
+        Area area = getArea(id);
         area.setHidden(hidden);
         return AreaView.from(area);
     }
 
-    private Area get(long id) {
+    /** 取得領域；不存在時丟出 404 AREA_NOT_FOUND */
+    public Area getArea(long id) {
         return areas
                 .findById(id)
                 .orElseThrow(
